@@ -1,0 +1,142 @@
+{
+  "common": {
+    "approve": "Approve",
+    "deny": "Deny",
+    "cancel": "Cancel",
+    "close": "Close",
+    "goBack": "Go back",
+    "logOut": "Log out",
+    "logOutConfirmTitle": "Log out",
+    "logOutConfirmBody": "Are you sure you want to log out?",
+    "done": "Done",
+    "confirm": "Confirm",
+    "submit": "Submit",
+    "save": "Save",
+    "loading": "Loading…",
+    "retry": "Retry",
+    "seeAll": "See all",
+    "viewAll": "View all",
+    "vote": "Vote"
+  },
+  "welcome": {
+    "title": "The society gate,\nnow in your pocket.",
+    "subtitle": "One app for visitor approvals, notices, amenities and dues — for every home in the community.",
+    "continueAs": "Continue as",
+    "roleResident": "Resident",
+    "roleResidentBlurb": "Approve visitors, book amenities, pay dues",
+    "roleGuard": "Security Guard",
+    "roleGuardBlurb": "Register visitors, verify entry & exit",
+    "roleAdmin": "Society Admin",
+    "roleAdminBlurb": "Manage residents, notices, billing",
+    "terms": "By continuing you agree to Portl's Terms & Privacy Policy"
+  },
+  "login": {
+    "signIn": "Sign in",
+    "continuingAs": "Continuing as",
+    "phoneLabel": "Mobile number",
+    "phonePlaceholder": "10-digit mobile number",
+    "otpHint": "We'll text you a one-time code — or use the demo code if SMS isn't configured.",
+    "sendOtp": "Send OTP",
+    "sending": "Sending…"
+  },
+  "otp": {
+    "title": "Enter OTP",
+    "subtitleReal": "We texted a code to",
+    "subtitleDemo": "SMS isn't configured for this deployment — use the demo code below.",
+    "demoOtpNote": "Demo OTP: 1234",
+    "errorSuffixDemo": " Demo OTP is 1234.",
+    "codePlaceholder": "Enter the code you received",
+    "resend": "Didn't get it? Resend code",
+    "verify": "Verify & continue",
+    "resendIn": "Resend in {{count}}s",
+    "codeResent": "Code resent"
+  },
+  "visitorCategories": {
+    "delivery": "Delivery",
+    "guest": "A guest",
+    "cab": "Your cab",
+    "service": "Service staff",
+    "other": "Someone"
+  },
+  "visitorApproval": {
+    "waitingAtGate": "{{category}} is waiting at the gate",
+    "forFlat": "For {{flat}}",
+    "approve": "Approve",
+    "deny": "Deny",
+    "leaveAtGate": "Leave at gate",
+    "approved": "Approved",
+    "denied": "Denied",
+    "leftAtGate": "Left at gate",
+    "callGuard": "Call the guard instead",
+    "noVisitorFound": "No visitor found"
+  },
+  "visitorPreapprove": {
+    "title": "Pre-approve a guest",
+    "guestFallback": "Guest",
+    "guestName": "Guest name",
+    "guestNamePlaceholder": "e.g. Ankit Verma",
+    "validFor": "Valid for",
+    "hoursShort": "{{count}}h",
+    "note": "Note for the guard (optional)",
+    "notePlaceholder": "e.g. Arriving by cab, ask them to call on arrival",
+    "generatePass": "Generate gate pass",
+    "validForHours": "Valid for the next {{count}} hours",
+    "shareCode": "Share this code with your guest, or ask the guard to scan the QR at the gate."
+  },
+  "residentHome": {
+    "greeting": "Hi, {{name}}",
+    "waitingForApproval": "Waiting for your approval",
+    "quickActions": "Quick actions",
+    "quickActionPreapprove": "Pre-approve",
+    "quickActionAmenities": "Amenities",
+    "quickActionPayments": "Payments",
+    "quickActionHelpdesk": "Helpdesk",
+    "quickActionDirectory": "Directory",
+    "quickActionPolls": "Polls",
+    "latestNotice": "Latest notice",
+    "communityPoll": "Community poll",
+    "payNow": "Pay now"
+  },
+  "guardHome": {
+    "greeting": "Hi, {{name}}",
+    "pending": "Pending",
+    "inSociety": "In society",
+    "todayTotal": "Today total",
+    "registerNewVisitor": "Register new visitor",
+    "registerSubtitle": "Log entry and request approval",
+    "pendingApproval": "Pending approval",
+    "allCaughtUp": "All caught up — nothing pending",
+    "currentlyInSociety": "Currently in society",
+    "noVisitorsInside": "No visitors inside right now",
+    "markEntry": "Mark entry",
+    "markExit": "Mark exit",
+    "waitingOnResident": "Waiting on {{flat}} resident"
+  },
+  "tabs": {
+    "home": "Home",
+    "visitors": "Visitors",
+    "amenities": "Amenities",
+    "helpdesk": "Helpdesk",
+    "more": "More",
+    "history": "History",
+    "profile": "Profile",
+    "notices": "Notices",
+    "complaints": "Tickets",
+    "gate": "Gate",
+    "register": "Register",
+    "overview": "Overview"
+  },
+  "settings": {
+    "language": "Language",
+    "english": "English",
+    "hindi": "हिन्दी",
+    "kannada": "ಕನ್ನಡ"
+  },
+  "offline": {
+    "willSync_one": "Offline — {{count}} action will sync automatically",
+    "willSync_other": "Offline — {{count}} actions will sync automatically",
+    "syncing": "Syncing queued actions…",
+    "queuedSyncing_one": "{{count}} queued action syncing…",
+    "queuedSyncing_other": "{{count}} queued actions syncing…"
+  }
+}

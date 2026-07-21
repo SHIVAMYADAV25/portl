@@ -1,0 +1,142 @@
+{
+  "common": {
+    "approve": "ಅನುಮೋದಿಸಿ",
+    "deny": "ನಿರಾಕರಿಸಿ",
+    "cancel": "ರದ್ದುಮಾಡಿ",
+    "close": "ಮುಚ್ಚಿ",
+    "goBack": "ಹಿಂದೆ ಹೋಗಿ",
+    "logOut": "ಲಾಗ್ ಔಟ್",
+    "logOutConfirmTitle": "ಲಾಗ್ ಔಟ್",
+    "logOutConfirmBody": "ನೀವು ಖಚಿತವಾಗಿ ಲಾಗ್ ಔಟ್ ಆಗಲು ಬಯಸುವಿರಾ?",
+    "done": "ಮುಗಿದಿದೆ",
+    "confirm": "ಖಚಿತಪಡಿಸಿ",
+    "submit": "ಸಲ್ಲಿಸಿ",
+    "save": "ಉಳಿಸಿ",
+    "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
+    "retry": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
+    "seeAll": "ಎಲ್ಲಾ ನೋಡಿ",
+    "viewAll": "ಎಲ್ಲಾ ನೋಡಿ",
+    "vote": "ಮತ ಹಾಕಿ"
+  },
+  "welcome": {
+    "title": "ಸೊಸೈಟಿಯ ಗೇಟ್,\nಈಗ ನಿಮ್ಮ ಜೇಬಿನಲ್ಲಿ.",
+    "subtitle": "ಸಂದರ್ಶಕರ ಅನುಮೋದನೆ, ಸೂಚನೆಗಳು, ಸೌಲಭ್ಯಗಳು ಮತ್ತು ಬಾಕಿಗಳಿಗಾಗಿ ಒಂದೇ ಆ್ಯಪ್ — ಸಮುದಾಯದ ಪ್ರತಿ ಮನೆಗೂ.",
+    "continueAs": "ಈ ರೂಪದಲ್ಲಿ ಮುಂದುವರಿಸಿ",
+    "roleResident": "ನಿವಾಸಿ",
+    "roleResidentBlurb": "ಸಂದರ್ಶಕರನ್ನು ಅನುಮೋದಿಸಿ, ಸೌಲಭ್ಯಗಳನ್ನು ಬುಕ್ ಮಾಡಿ, ಬಾಕಿ ಪಾವತಿಸಿ",
+    "roleGuard": "ಭದ್ರತಾ ಸಿಬ್ಬಂದಿ",
+    "roleGuardBlurb": "ಸಂದರ್ಶಕರನ್ನು ನೋಂದಾಯಿಸಿ, ಪ್ರವೇಶ ಮತ್ತು ನಿರ್ಗಮನ ಪರಿಶೀಲಿಸಿ",
+    "roleAdmin": "ಸೊಸೈಟಿ ಅಡ್ಮಿನ್",
+    "roleAdminBlurb": "ನಿವಾಸಿಗಳು, ಸೂಚನೆಗಳು, ಬಿಲ್ಲಿಂಗ್ ನಿರ್ವಹಿಸಿ",
+    "terms": "ಮುಂದುವರಿಸುವ ಮೂಲಕ ನೀವು Portl ನ ನಿಯಮಗಳು ಮತ್ತು ಗೌಪ್ಯತಾ ನೀತಿಗೆ ಒಪ್ಪುತ್ತೀರಿ"
+  },
+  "login": {
+    "signIn": "ಸೈನ್ ಇನ್ ಮಾಡಿ",
+    "continuingAs": "ಈ ರೂಪದಲ್ಲಿ ಮುಂದುವರಿಯುತ್ತಿದೆ",
+    "phoneLabel": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+    "phonePlaceholder": "10 ಅಂಕಿಗಳ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+    "otpHint": "ನಾವು ನಿಮಗೆ ಒಂದು ಬಾರಿಯ ಕೋಡ್ ಕಳುಹಿಸುತ್ತೇವೆ — ಅಥವಾ SMS ಕಾನ್ಫಿಗರ್ ಆಗಿಲ್ಲದಿದ್ದರೆ ಡೆಮೊ ಕೋಡ್ ಬಳಸಿ.",
+    "sendOtp": "OTP ಕಳುಹಿಸಿ",
+    "sending": "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ…"
+  },
+  "otp": {
+    "title": "OTP ನಮೂದಿಸಿ",
+    "subtitleReal": "ನಾವು ಒಂದು ಕೋಡ್ ಕಳುಹಿಸಿದ್ದೇವೆ",
+    "subtitleDemo": "ಈ ಡಿಪ್ಲಾಯ್‌ಮೆಂಟ್‌ಗೆ SMS ಕಾನ್ಫಿಗರ್ ಆಗಿಲ್ಲ — ಕೆಳಗಿನ ಡೆಮೊ ಕೋಡ್ ಬಳಸಿ.",
+    "demoOtpNote": "ಡೆಮೊ OTP: 1234",
+    "errorSuffixDemo": " ಡೆಮೊ OTP 1234 ಆಗಿದೆ.",
+    "codePlaceholder": "ನೀವು ಸ್ವೀಕರಿಸಿದ ಕೋಡ್ ನಮೂದಿಸಿ",
+    "resend": "ಸಿಗಲಿಲ್ಲವೇ? ಮತ್ತೆ ಕಳುಹಿಸಿ",
+    "verify": "ಪರಿಶೀಲಿಸಿ ಮತ್ತು ಮುಂದುವರಿಸಿ",
+    "resendIn": "{{count}} ಸೆಕೆಂಡುಗಳಲ್ಲಿ ಮತ್ತೆ ಕಳುಹಿಸಿ",
+    "codeResent": "ಕೋಡ್ ಮತ್ತೆ ಕಳುಹಿಸಲಾಗಿದೆ"
+  },
+  "visitorCategories": {
+    "delivery": "ಡೆಲಿವರಿ",
+    "guest": "ಒಬ್ಬ ಅತಿಥಿ",
+    "cab": "ನಿಮ್ಮ ಕ್ಯಾಬ್",
+    "service": "ಸೇವಾ ಸಿಬ್ಬಂದಿ",
+    "other": "ಯಾರೋ ಒಬ್ಬರು"
+  },
+  "visitorApproval": {
+    "waitingAtGate": "{{category}} ಗೇಟ್‌ನಲ್ಲಿ ಕಾಯುತ್ತಿದ್ದಾರೆ",
+    "forFlat": "{{flat}} ಗಾಗಿ",
+    "approve": "ಅನುಮೋದಿಸಿ",
+    "deny": "ನಿರಾಕರಿಸಿ",
+    "leaveAtGate": "ಗೇಟ್‌ನಲ್ಲಿ ಬಿಡಿ",
+    "approved": "ಅನುಮೋದಿಸಲಾಗಿದೆ",
+    "denied": "ನಿರಾಕರಿಸಲಾಗಿದೆ",
+    "leftAtGate": "ಗೇಟ್‌ನಲ್ಲಿ ಬಿಡಲಾಗಿದೆ",
+    "callGuard": "ಬದಲಿಗೆ ಗಾರ್ಡ್‌ಗೆ ಕರೆ ಮಾಡಿ",
+    "noVisitorFound": "ಯಾವುದೇ ಸಂದರ್ಶಕರು ಕಂಡುಬಂದಿಲ್ಲ"
+  },
+  "visitorPreapprove": {
+    "title": "ಅತಿಥಿಯನ್ನು ಮೊದಲೇ ಅನುಮೋದಿಸಿ",
+    "guestFallback": "ಅತಿಥಿ",
+    "guestName": "ಅತಿಥಿಯ ಹೆಸರು",
+    "guestNamePlaceholder": "ಉದಾ. ಅಂಕಿತ್ ವರ್ಮಾ",
+    "validFor": "ಇಷ್ಟು ಸಮಯ ಮಾನ್ಯ",
+    "hoursShort": "{{count}}ಗಂ",
+    "note": "ಗಾರ್ಡ್‌ಗೆ ಟಿಪ್ಪಣಿ (ಐಚ್ಛಿಕ)",
+    "notePlaceholder": "ಉದಾ. ಕ್ಯಾಬ್‌ನಲ್ಲಿ ಬರುತ್ತಿದ್ದಾರೆ, ತಲುಪಿದಾಗ ಕರೆ ಮಾಡಲು ಹೇಳಿ",
+    "generatePass": "ಗೇಟ್ ಪಾಸ್ ರಚಿಸಿ",
+    "validForHours": "ಮುಂದಿನ {{count}} ಗಂಟೆಗಳವರೆಗೆ ಮಾನ್ಯ",
+    "shareCode": "ಈ ಕೋಡ್ ಅನ್ನು ನಿಮ್ಮ ಅತಿಥಿಯೊಂದಿಗೆ ಹಂಚಿಕೊಳ್ಳಿ, ಅಥವಾ ಗಾರ್ಡ್‌ಗೆ ಗೇಟ್‌ನಲ್ಲಿ QR ಸ್ಕ್ಯಾನ್ ಮಾಡಲು ಹೇಳಿ."
+  },
+  "residentHome": {
+    "greeting": "ನಮಸ್ಕಾರ, {{name}}",
+    "waitingForApproval": "ನಿಮ್ಮ ಅನುಮೋದನೆಗಾಗಿ ಕಾಯುತ್ತಿದೆ",
+    "quickActions": "ತ್ವರಿತ ಕ್ರಿಯೆಗಳು",
+    "quickActionPreapprove": "ಪೂರ್ವ ಅನುಮೋದನೆ",
+    "quickActionAmenities": "ಸೌಲಭ್ಯಗಳು",
+    "quickActionPayments": "ಪಾವತಿಗಳು",
+    "quickActionHelpdesk": "ಹೆಲ್ಪ್‌ಡೆಸ್ಕ್",
+    "quickActionDirectory": "ಡೈರೆಕ್ಟರಿ",
+    "quickActionPolls": "ಪೋಲ್‌ಗಳು",
+    "latestNotice": "ಇತ್ತೀಚಿನ ಸೂಚನೆ",
+    "communityPoll": "ಸಮುದಾಯ ಪೋಲ್",
+    "payNow": "ಈಗ ಪಾವತಿಸಿ"
+  },
+  "guardHome": {
+    "greeting": "ನಮಸ್ಕಾರ, {{name}}",
+    "pending": "ಬಾಕಿ ಇದೆ",
+    "inSociety": "ಸೊಸೈಟಿಯಲ್ಲಿ",
+    "todayTotal": "ಇಂದಿನ ಒಟ್ಟು",
+    "registerNewVisitor": "ಹೊಸ ಸಂದರ್ಶಕರನ್ನು ನೋಂದಾಯಿಸಿ",
+    "registerSubtitle": "ಪ್ರವೇಶ ದಾಖಲಿಸಿ ಮತ್ತು ಅನುಮೋದನೆ ಕೋರಿ",
+    "pendingApproval": "ಅನುಮೋದನೆ ಬಾಕಿ ಇದೆ",
+    "allCaughtUp": "ಎಲ್ಲಾ ಪೂರ್ಣಗೊಂಡಿದೆ — ಏನೂ ಬಾಕಿ ಇಲ್ಲ",
+    "currentlyInSociety": "ಪ್ರಸ್ತುತ ಸೊಸೈಟಿಯಲ್ಲಿ",
+    "noVisitorsInside": "ಈಗ ಒಳಗೆ ಯಾವುದೇ ಸಂದರ್ಶಕರಿಲ್ಲ",
+    "markEntry": "ಪ್ರವೇಶ ದಾಖಲಿಸಿ",
+    "markExit": "ನಿರ್ಗಮನ ದಾಖಲಿಸಿ",
+    "waitingOnResident": "{{flat}} ನಿವಾಸಿಯ ಪ್ರತೀಕ್ಷೆಯಲ್ಲಿ"
+  },
+  "tabs": {
+    "home": "ಹೋಮ್",
+    "visitors": "ಸಂದರ್ಶಕರು",
+    "amenities": "ಸೌಲಭ್ಯಗಳು",
+    "helpdesk": "ಹೆಲ್ಪ್‌ಡೆಸ್ಕ್",
+    "more": "ಇನ್ನಷ್ಟು",
+    "history": "ಇತಿಹಾಸ",
+    "profile": "ಪ್ರೊಫೈಲ್",
+    "notices": "ಸೂಚನೆಗಳು",
+    "complaints": "ಟಿಕೆಟ್‌ಗಳು",
+    "gate": "ಗೇಟ್",
+    "register": "ನೋಂದಣಿ",
+    "overview": "ಅವಲೋಕನ"
+  },
+  "settings": {
+    "language": "ಭಾಷೆ",
+    "english": "English",
+    "hindi": "हिन्दी",
+    "kannada": "ಕನ್ನಡ"
+  },
+  "offline": {
+    "willSync_one": "ಆಫ್‌ಲೈನ್ — {{count}} ಕ್ರಿಯೆ ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸಿಂಕ್ ಆಗುತ್ತದೆ",
+    "willSync_other": "ಆಫ್‌ಲೈನ್ — {{count}} ಕ್ರಿಯೆಗಳು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಸಿಂಕ್ ಆಗುತ್ತವೆ",
+    "syncing": "ಸರತಿಯಲ್ಲಿರುವ ಕ್ರಿಯೆಗಳು ಸಿಂಕ್ ಆಗುತ್ತಿವೆ…",
+    "queuedSyncing_one": "{{count}} ಸರತಿ ಕ್ರಿಯೆ ಸಿಂಕ್ ಆಗುತ್ತಿದೆ…",
+    "queuedSyncing_other": "{{count}} ಸರತಿ ಕ್ರಿಯೆಗಳು ಸಿಂಕ್ ಆಗುತ್ತಿವೆ…"
+  }
+}

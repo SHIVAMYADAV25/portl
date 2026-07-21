@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "Portl",
+    "slug": "portl",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "portl",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFF8F1"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.portl.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FF7A30",
+        "foregroundImage": "./assets/images/icon.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "com.portl.app"
+    },
+    "web": {
+      "favicon": "./assets/images/icon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icon.png",
+          "imageWidth": 120,
+          "resizeMode": "contain",
+          "backgroundColor": "#FFF8F1"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Portl uses the camera to scan visitor QR passes at the gate."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#FF7A30"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

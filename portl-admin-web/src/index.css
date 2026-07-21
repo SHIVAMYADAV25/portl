@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ember-50: #fff4ec;
+  --color-ember-100: #ffe4d1;
+  --color-ember-200: #ffc7a3;
+  --color-ember-300: #ffa36b;
+  --color-ember-400: #ff8a47;
+  --color-ember-500: #ff7a30;
+  --color-ember-600: #f0611a;
+  --color-ember-700: #c74e13;
+  --color-ember-800: #9e3f14;
+  --color-ember-900: #7a3313;
+
+  --color-ink-50: #f7f5f3;
+  --color-ink-100: #ede9e5;
+  --color-ink-200: #d8d1c9;
+  --color-ink-300: #b4a99c;
+  --color-ink-400: #8a7d6e;
+  --color-ink-500: #655a4d;
+  --color-ink-600: #4a4038;
+  --color-ink-700: #362e27;
+  --color-ink-800: #251f1a;
+  --color-ink-900: #18140f;
+
+  --color-moss-50: #eff7ee;
+  --color-moss-400: #4fa35c;
+  --color-moss-500: #3b8a47;
+  --color-moss-600: #2f6e39;
+
+  --color-rust-50: #fdeeec;
+  --color-rust-400: #e8604a;
+  --color-rust-500: #d6462d;
+  --color-rust-600: #b33823;
+
+  --color-gold-50: #fff8e8;
+  --color-gold-400: #e8b33d;
+  --color-gold-500: #d19a22;
+
+  --color-teal-50: #eaf6f5;
+  --color-teal-400: #3f9c93;
+  --color-teal-500: #2e837a;
+
+  --color-cream: #fff8f1;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  color: var(--color-ink-800);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-200);
+  border-radius: 999px;
+}

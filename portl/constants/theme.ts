@@ -1,0 +1,49 @@
+// Mirrors tailwind.config.js — use in places that need raw hex (icons, SVG, native modules)
+export const colors = {
+  ember50: "#FFF4EC",
+  ember100: "#FFE4D1",
+  ember200: "#FFC7A3",
+  ember300: "#FFA36B",
+  ember400: "#FF8A47",
+  ember500: "#FF7A30",
+  ember600: "#F0611A",
+  ember700: "#C74E13",
+
+  ink50: "#F7F5F3",
+  ink100: "#EDE9E5",
+  ink200: "#D8D1C9",
+  ink300: "#B4A99C",
+  ink400: "#8A7D6E",
+  ink500: "#655A4D",
+  ink600: "#4A4038",
+  ink700: "#362E27",
+  ink800: "#251F1A",
+  ink900: "#18140F",
+
+  moss400: "#4FA35C",
+  moss500: "#3B8A47",
+  moss600: "#2F6E39",
+  rust400: "#E8604A",
+  rust500: "#D6462D",
+  gold400: "#E8B33D",
+  gold500: "#D19A22",
+  teal400: "#3F9C93",
+  teal500: "#2E837A",
+
+  cream: "#FFF8F1",
+  paper: "#FFFFFF",
+};
+
+export const statusColor: Record<string, { bg: string; text: string; label: string }> = {
+  pending: { bg: colors.gold400, text: "#3A2C05", label: "Pending" },
+  approved: { bg: colors.moss500, text: "#FFFFFF", label: "Approved" },
+  rejected: { bg: colors.rust500, text: "#FFFFFF", label: "Denied" },
+  arrived: { bg: colors.teal500, text: "#FFFFFF", label: "Arrived" },
+  exited: { bg: colors.ink400, text: "#FFFFFF", label: "Exited" },
+  left_at_gate: { bg: colors.ink300, text: "#3A2C05", label: "Left at Gate" },
+  open: { bg: colors.rust500, text: "#FFFFFF", label: "Open" },
+  assigned: { bg: colors.gold400, text: "#3A2C05", label: "Assigned" },
+  in_progress: { bg: colors.teal500, text: "#FFFFFF", label: "In Progress" },
+  resolved: { bg: colors.moss500, text: "#FFFFFF", label: "Resolved" },
+  closed: { bg: colors.ink400, text: "#FFFFFF", label: "Closed" },
+};

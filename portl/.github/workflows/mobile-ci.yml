@@ -1,0 +1,40 @@
+# Assumes this file lives at the root of its own repo (the portl mobile app, built separately via
+# EAS — see README.md "Getting started"). See portl-backend/.github/workflows/backend-ci.yml for
+# the monorepo alternative if all three Portl projects end up living in one repo instead.
+name: Mobile CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        # Expo's peer dependency graph is fast-moving and occasionally lags a specific React/RN
+        # patch release; --legacy-peer-deps avoids noisy ERESOLVE failures on exact peer version
+        # matches that are otherwise compatible. Remove this flag once the dependency tree
+        # resolves cleanly under strict peer checking.
+        run: npm ci --legacy-peer-deps
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Export bundle (build sanity check)
+        # `expo export` bundles the JS for all platforms without needing a native build/EAS
+        # account — a fast way to catch bundler/import errors on every push. Real device builds
+        # still go through `eas build` (needs EAS credentials — see README.md "Getting started").
+        run: npx expo export --platform web

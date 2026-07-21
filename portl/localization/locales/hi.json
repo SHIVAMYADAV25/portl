@@ -1,0 +1,142 @@
+{
+  "common": {
+    "approve": "स्वीकृत करें",
+    "deny": "अस्वीकार करें",
+    "cancel": "रद्द करें",
+    "close": "बंद करें",
+    "goBack": "वापस जाएं",
+    "logOut": "लॉग आउट",
+    "logOutConfirmTitle": "लॉग आउट",
+    "logOutConfirmBody": "क्या आप वाकई लॉग आउट करना चाहते हैं?",
+    "done": "हो गया",
+    "confirm": "पुष्टि करें",
+    "submit": "जमा करें",
+    "save": "सहेजें",
+    "loading": "लोड हो रहा है…",
+    "retry": "पुनः प्रयास करें",
+    "seeAll": "सभी देखें",
+    "viewAll": "सभी देखें",
+    "vote": "वोट करें"
+  },
+  "welcome": {
+    "title": "सोसाइटी का गेट,\nअब आपकी जेब में।",
+    "subtitle": "विज़िटर अनुमोदन, सूचनाएं, सुविधाएं और बकाया — समुदाय के हर घर के लिए एक ऐप।",
+    "continueAs": "इस रूप में जारी रखें",
+    "roleResident": "निवासी",
+    "roleResidentBlurb": "विज़िटर स्वीकृत करें, सुविधाएं बुक करें, बकाया चुकाएं",
+    "roleGuard": "सुरक्षा गार्ड",
+    "roleGuardBlurb": "विज़िटर दर्ज करें, प्रवेश और निकास सत्यापित करें",
+    "roleAdmin": "सोसाइटी एडमिन",
+    "roleAdminBlurb": "निवासियों, सूचनाओं, बिलिंग का प्रबंधन करें",
+    "terms": "जारी रखने पर आप Portl की शर्तों और गोपनीयता नीति से सहमत होते हैं"
+  },
+  "login": {
+    "signIn": "साइन इन करें",
+    "continuingAs": "इस रूप में जारी",
+    "phoneLabel": "मोबाइल नंबर",
+    "phonePlaceholder": "10 अंकों का मोबाइल नंबर",
+    "otpHint": "हम आपको एक बार का कोड भेजेंगे — या यदि SMS सेट नहीं है तो डेमो कोड का उपयोग करें।",
+    "sendOtp": "OTP भेजें",
+    "sending": "भेजा जा रहा है…"
+  },
+  "otp": {
+    "title": "OTP दर्ज करें",
+    "subtitleReal": "हमने एक कोड भेजा है",
+    "subtitleDemo": "इस डिप्लॉयमेंट के लिए SMS सेट नहीं है — नीचे दिए गए डेमो कोड का उपयोग करें।",
+    "demoOtpNote": "डेमो OTP: 1234",
+    "errorSuffixDemo": " डेमो OTP 1234 है।",
+    "codePlaceholder": "प्राप्त कोड दर्ज करें",
+    "resend": "कोड नहीं मिला? दोबारा भेजें",
+    "verify": "सत्यापित करें और जारी रखें",
+    "resendIn": "{{count}} सेकंड में दोबारा भेजें",
+    "codeResent": "कोड दोबारा भेजा गया"
+  },
+  "visitorCategories": {
+    "delivery": "डिलीवरी",
+    "guest": "एक मेहमान",
+    "cab": "आपकी कैब",
+    "service": "सेवा कर्मी",
+    "other": "कोई व्यक्ति"
+  },
+  "visitorApproval": {
+    "waitingAtGate": "{{category}} गेट पर प्रतीक्षा कर रहे हैं",
+    "forFlat": "{{flat}} के लिए",
+    "approve": "स्वीकृत करें",
+    "deny": "अस्वीकार करें",
+    "leaveAtGate": "गेट पर छोड़ें",
+    "approved": "स्वीकृत",
+    "denied": "अस्वीकृत",
+    "leftAtGate": "गेट पर छोड़ा गया",
+    "callGuard": "इसके बजाय गार्ड को कॉल करें",
+    "noVisitorFound": "कोई विज़िटर नहीं मिला"
+  },
+  "visitorPreapprove": {
+    "title": "मेहमान को पहले से स्वीकृत करें",
+    "guestFallback": "मेहमान",
+    "guestName": "मेहमान का नाम",
+    "guestNamePlaceholder": "जैसे अंकित वर्मा",
+    "validFor": "इसके लिए मान्य",
+    "hoursShort": "{{count}} घं",
+    "note": "गार्ड के लिए नोट (वैकल्पिक)",
+    "notePlaceholder": "जैसे कैब से आ रहे हैं, पहुंचने पर कॉल करने को कहें",
+    "generatePass": "गेट पास बनाएं",
+    "validForHours": "अगले {{count}} घंटों के लिए मान्य",
+    "shareCode": "यह कोड अपने मेहमान के साथ साझा करें, या गार्ड से गेट पर QR स्कैन करने को कहें।"
+  },
+  "residentHome": {
+    "greeting": "नमस्ते, {{name}}",
+    "waitingForApproval": "आपकी स्वीकृति की प्रतीक्षा में",
+    "quickActions": "त्वरित कार्य",
+    "quickActionPreapprove": "पूर्व-स्वीकृति",
+    "quickActionAmenities": "सुविधाएं",
+    "quickActionPayments": "भुगतान",
+    "quickActionHelpdesk": "हेल्पडेस्क",
+    "quickActionDirectory": "डायरेक्टरी",
+    "quickActionPolls": "पोल",
+    "latestNotice": "नवीनतम सूचना",
+    "communityPoll": "सामुदायिक पोल",
+    "payNow": "अभी भुगतान करें"
+  },
+  "guardHome": {
+    "greeting": "नमस्ते, {{name}}",
+    "pending": "लंबित",
+    "inSociety": "सोसाइटी में",
+    "todayTotal": "आज कुल",
+    "registerNewVisitor": "नया विज़िटर दर्ज करें",
+    "registerSubtitle": "प्रवेश दर्ज करें और स्वीकृति का अनुरोध करें",
+    "pendingApproval": "स्वीकृति लंबित",
+    "allCaughtUp": "सब पूरा हो गया — कुछ भी लंबित नहीं",
+    "currentlyInSociety": "वर्तमान में सोसाइटी में",
+    "noVisitorsInside": "अभी कोई विज़िटर अंदर नहीं है",
+    "markEntry": "प्रवेश दर्ज करें",
+    "markExit": "निकास दर्ज करें",
+    "waitingOnResident": "{{flat}} निवासी की प्रतीक्षा में"
+  },
+  "tabs": {
+    "home": "होम",
+    "visitors": "विज़िटर",
+    "amenities": "सुविधाएं",
+    "helpdesk": "हेल्पडेस्क",
+    "more": "और",
+    "history": "इतिहास",
+    "profile": "प्रोफ़ाइल",
+    "notices": "सूचनाएं",
+    "complaints": "टिकट",
+    "gate": "गेट",
+    "register": "दर्ज करें",
+    "overview": "अवलोकन"
+  },
+  "settings": {
+    "language": "भाषा",
+    "english": "English",
+    "hindi": "हिन्दी",
+    "kannada": "ಕನ್ನಡ"
+  },
+  "offline": {
+    "willSync_one": "ऑफ़लाइन — {{count}} कार्य स्वतः सिंक हो जाएगा",
+    "willSync_other": "ऑफ़लाइन — {{count}} कार्य स्वतः सिंक हो जाएंगे",
+    "syncing": "कतारबद्ध कार्य सिंक हो रहे हैं…",
+    "queuedSyncing_one": "{{count}} कतारबद्ध कार्य सिंक हो रहा है…",
+    "queuedSyncing_other": "{{count}} कतारबद्ध कार्य सिंक हो रहे हैं…"
+  }
+}
