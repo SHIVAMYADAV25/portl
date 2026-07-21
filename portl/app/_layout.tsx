@@ -1,5 +1,5 @@
 import "../global.css";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -62,15 +62,10 @@ export default function RootLayout() {
     initI18n().then(() => setI18nReady(true));
   }, []);
 
-  console.log("fontsLoaded:", fontsLoaded);
-console.log("hasHydrated:", hasHydrated);
-console.log("i18nReady:", i18nReady);
+  const ready = fontsLoaded && hasHydrated && i18nReady;
 
-const ready = fontsLoaded && hasHydrated && i18nReady;
-  // const ready = fontsLoaded && hasHydrated && i18nReady;
-
-  const onLayoutRootView = useCallback(async () => {
-    if (ready) await SplashScreen.hideAsync();
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync().catch(() => {});
   }, [ready]);
 
   useProtectedRoute();
@@ -79,7 +74,7 @@ const ready = fontsLoaded && hasHydrated && i18nReady;
   if (!ready) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <StatusBar style="dark" />
