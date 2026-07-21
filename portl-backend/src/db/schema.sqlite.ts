@@ -30,12 +30,21 @@ export const flats = sqliteTable("flats", {
 export const users = sqliteTable("users", {
   id: id(),
   name: text("name").notNull(),
-  phone: text("phone").notNull().unique(),
-  passwordHash: text("password_hash"), // nullable: demo/OTP users may not set one
+  email: text("email").notNull(), // login identifier now — replaces phone+OTP
+  phone: text("phone").notNull(),
+  passwordHash: text("password_hash"), // null until the invite is activated
   role: text("role", { enum: ["resident", "guard", "admin"] }).notNull(),
+  status: text("status", { enum: ["pending_invitation", "active", "disabled"] })
+    .notNull()
+    .default("active"), // the founding admin from /auth/society/bootstrap is active immediately
+  societyId: text("society_id").notNull(),
+  invitedByUserId: text("invited_by_user_id"),
   flatId: text("flat_id"),
   flatLabel: text("flat_label"),
   towerName: text("tower_name"),
+  ownerOrTenant: text("owner_or_tenant", { enum: ["owner", "tenant"] }),
+  gate: text("gate"), // guard-only
+  shift: text("shift"), // guard-only
   avatarUrl: text("avatar_url"),
   languagePref: text("language_pref").default("en"),
   createdAt: now(),
@@ -209,5 +218,19 @@ export const payments = sqliteTable("payments", {
   razorpayOrderId: text("razorpay_order_id"),
   razorpayPaymentId: text("razorpay_payment_id"),
   status: text("status", { enum: ["created", "paid", "failed"] }).notNull().default("created"),
+  createdAt: now(),
+});
+
+// ---------- Invitations ----------
+// One row per pending invite. tokenHash is the SHA-256 of the raw token emailed/deep-linked to
+// the invitee — the raw token itself is never stored, exactly like a password. usedAt is set the
+// instant activation succeeds; resend inserts a fresh row instead of reusing this one.
+export const invitations = sqliteTable("invitations", {
+  id: id(),
+  userId: text("user_id").notNull(),
+  societyId: text("society_id").notNull(),
+  tokenHash: text("token_hash").notNull(),
+  expiresAt: text("expires_at").notNull(),
+  usedAt: text("used_at"),
   createdAt: now(),
 });

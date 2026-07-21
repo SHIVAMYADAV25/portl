@@ -39,9 +39,9 @@ async function seed() {
   const adminId = uuid();
 
   await db.insert(users).values([
-    { id: residentId, name: "Priya Menon", phone: "9876543210", passwordHash, role: "resident", flatId, flatLabel: "A-1005", towerName: "Tower A" },
-    { id: guardId, name: "Rohit Yadav", phone: "9876500000", passwordHash, role: "guard", towerName: "Main Gate" },
-    { id: adminId, name: "Mrs. Sharma", phone: "9876511111", passwordHash, role: "admin", towerName: "Committee" },
+    { id: residentId, name: "Priya Menon", email: "priya@cedarheights.demo", phone: "9876543210", passwordHash, role: "resident", status: "active", societyId, flatId, flatLabel: "A-1005", towerName: "Tower A", ownerOrTenant: "owner" },
+    { id: guardId, name: "Rohit Yadav", email: "rohit.guard@cedarheights.demo", phone: "9876500000", passwordHash, role: "guard", status: "active", societyId, towerName: "Main Gate", gate: "Main Gate", shift: "morning" },
+    { id: adminId, name: "Mrs. Sharma", email: "admin@cedarheights.demo", phone: "9876511111", passwordHash, role: "admin", status: "active", societyId, towerName: "Committee" },
   ]);
 
   await db.insert(visitors).values([
@@ -138,10 +138,10 @@ async function seed() {
     { id: uuid(), flatLabel: "A-1005", title: "March Maintenance", amount: 3540, period: "2026-2027", dueDate: "2026-06-30", status: "paid" },
   ]);
 
-  console.log("Done. Demo accounts (password: demo1234, or OTP 1234):");
-  console.log("  Resident — 9876543210");
-  console.log("  Guard    — 9876500000");
-  console.log("  Admin    — 9876511111");
+  console.log("Done. Demo accounts (password: demo1234):");
+  console.log("  Resident — priya@cedarheights.demo");
+  console.log("  Guard    — rohit.guard@cedarheights.demo");
+  console.log("  Admin    — admin@cedarheights.demo");
 }
 
 seed()

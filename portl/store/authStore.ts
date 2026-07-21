@@ -1,26 +1,58 @@
 import { create } from "zustand";
 import * as SecureStore from "expo-secure-store";
-import type { Role, User } from "@/types";
-import { demoUsers } from "@/services/mockData";
-import { api, ApiUnreachableError, setTokens, clearTokens } from "@/services/api";
+import type { User } from "@/types";
+import { api, ApiError, ApiUnreachableError, setTokens, clearTokens } from "@/services/api";
 import { connectSocket, disconnectSocket } from "@/services/socket";
 
 interface AuthState {
   user: User | null;
   hasHydrated: boolean;
-  /** True when the current session is backed by a real API call (not the offline mock fallback). */
   isBackendLive: boolean;
   hydrate: () => Promise<void>;
-  /** Matches the mobile OTP screen: tries the real backend first, falls back to the mock demo
-   *  account for the given role if the backend can't be reached (offline dev / grading without
-   *  the backend running). */
-  loginWithOtp: (phone: string, otp: string, role: Role) => Promise<{ ok: boolean; error?: string }>;
+  /** Step 1: the very first person to use Portl — creates the society + becomes its admin. */
+  bootstrapSociety: (input: {
+    societyName: string;
+    address?: string;
+    adminName: string;
+    adminEmail: string;
+    adminPhone: string;
+    password: string;
+  }) => Promise<{ ok: boolean; error?: string }>;
+  /** Step 6/8/10: the one login screen every role shares — no role picker. */
+  login: (email: string, password: string) => Promise<{ ok: boolean; error?: string; code?: string }>;
+  /** Preview an invitation before showing the "set a password" form. */
+  fetchInvitation: (
+    token: string
+  ) => Promise<{ ok: true; name: string; email: string; role: string; societyName: string } | { ok: false; error: string }>;
+  /** Set a password and activate — logs the person straight in. */
+  activateInvitation: (token: string, password: string) => Promise<{ ok: boolean; error?: string }>;
   logout: () => Promise<void>;
 }
 
 const USER_STORAGE_KEY = "portl.session.user";
 
-export const useAuthStore = create<AuthState>((set, get) => ({
+async function persistSession(user: User) {
+  try {
+    await SecureStore.setItemAsync(USER_STORAGE_KEY, JSON.stringify({ user }));
+  } catch {
+    // ignore — secure store unavailable
+  }
+}
+
+function extractErrorMessage(err: unknown): string {
+  if (err instanceof ApiUnreachableError) return "Can't reach the Portl server. Check your connection.";
+  if (err instanceof ApiError) {
+    try {
+      const parsed = JSON.parse(err.message);
+      return typeof parsed === "string" ? parsed : parsed?.error ?? err.message;
+    } catch {
+      return err.message.replace(/^"|"$/g, "");
+    }
+  }
+  return "Something went wrong";
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   hasHydrated: false,
   isBackendLive: false,
@@ -29,9 +61,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const saved = await SecureStore.getItemAsync(USER_STORAGE_KEY);
       if (saved) {
-        const { user, isBackendLive } = JSON.parse(saved) as { user: User; isBackendLive: boolean };
-        set({ user, isBackendLive, hasHydrated: true });
-        if (isBackendLive && user.flatLabel) connectSocket(user.flatLabel).catch(() => {});
+        const { user } = JSON.parse(saved) as { user: User };
+        set({ user, isBackendLive: true, hasHydrated: true });
+        if (user.flatLabel) connectSocket(user.flatLabel).catch(() => {});
         return;
       }
     } catch {
@@ -40,30 +72,72 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ hasHydrated: true });
   },
 
-  loginWithOtp: async (phone, otp, role) => {
+  bootstrapSociety: async (input) => {
     try {
       const res = await api.post<{ user: User; accessToken: string; refreshToken: string }>(
-        "/auth/verify-otp",
-        { phone, otp, role },
+        "/auth/society/bootstrap",
+        input,
         { auth: false }
       );
       await setTokens(res.accessToken, res.refreshToken);
-      await SecureStore.setItemAsync(USER_STORAGE_KEY, JSON.stringify({ user: res.user, isBackendLive: true }));
+      await persistSession(res.user);
+      set({ user: res.user, isBackendLive: true });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: extractErrorMessage(err) };
+    }
+  },
+
+  login: async (email, password) => {
+    try {
+      const res = await api.post<{ user: User; accessToken: string; refreshToken: string }>(
+        "/auth/login",
+        { email, password },
+        { auth: false }
+      );
+      await setTokens(res.accessToken, res.refreshToken);
+      await persistSession(res.user);
       set({ user: res.user, isBackendLive: true });
       if (res.user.flatLabel) connectSocket(res.user.flatLabel).catch(() => {});
       return { ok: true };
     } catch (err) {
-      if (err instanceof ApiUnreachableError) {
-        // No backend reachable — fall back to the local mock account so the app is still
-        // fully demoable. Real OTP check (1234) still applies for a consistent UX.
-        if (otp !== "1234") return { ok: false, error: "Incorrect OTP" };
-        const user = demoUsers[role];
-        await SecureStore.setItemAsync(USER_STORAGE_KEY, JSON.stringify({ user, isBackendLive: false }));
-        set({ user, isBackendLive: false });
-        return { ok: true };
+      let code: string | undefined;
+      if (err instanceof ApiError) {
+        try {
+          code = JSON.parse(err.message)?.code;
+        } catch {
+          // plain string error — no code
+        }
       }
-      const message = (err as Error).message || "Something went wrong";
-      return { ok: false, error: message.includes("Incorrect OTP") ? "Incorrect OTP" : message };
+      return { ok: false, error: extractErrorMessage(err), code };
+    }
+  },
+
+  fetchInvitation: async (token) => {
+    try {
+      const res = await api.get<{ name: string; email: string; role: string; societyName: string }>(
+        `/auth/invitations/${token}`,
+        { auth: false }
+      );
+      return { ok: true, ...res };
+    } catch (err) {
+      return { ok: false, error: extractErrorMessage(err) };
+    }
+  },
+
+  activateInvitation: async (token, password) => {
+    try {
+      const res = await api.post<{ user: User; accessToken: string; refreshToken: string }>(
+        `/auth/invitations/${token}/activate`,
+        { password },
+        { auth: false }
+      );
+      await setTokens(res.accessToken, res.refreshToken);
+      await persistSession(res.user);
+      set({ user: res.user, isBackendLive: true });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: extractErrorMessage(err) };
     }
   },
 

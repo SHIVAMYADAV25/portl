@@ -46,4 +46,7 @@ export const statusColor: Record<string, { bg: string; text: string; label: stri
   in_progress: { bg: colors.teal500, text: "#FFFFFF", label: "In Progress" },
   resolved: { bg: colors.moss500, text: "#FFFFFF", label: "Resolved" },
   closed: { bg: colors.ink400, text: "#FFFFFF", label: "Closed" },
+  pending_invitation: { bg: colors.gold400, text: "#3A2C05", label: "Pending" },
+  active: { bg: colors.moss500, text: "#FFFFFF", label: "Active" },
+  disabled: { bg: colors.ink300, text: "#3A2C05", label: "Disabled" },
 };

@@ -1,13 +1,14 @@
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "portl-dev-secret-change-me";
-const ACCESS_TOKEN_TTL = "1h";
+const ACCESS_TOKEN_TTL = "15m";
 const REFRESH_TOKEN_TTL = "30d";
 
 export interface TokenPayload {
   sub: string; // user id
   role: "resident" | "guard" | "admin";
-  phone: string;
+  societyId: string;
+  flatId?: string;
 }
 
 export function signAccessToken(payload: TokenPayload) {

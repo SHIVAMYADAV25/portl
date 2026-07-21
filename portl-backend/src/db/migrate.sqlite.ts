@@ -26,14 +26,31 @@ export function runMigrationsSqlite() {
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
-      phone TEXT NOT NULL UNIQUE,
+      email TEXT NOT NULL,
+      phone TEXT NOT NULL,
       password_hash TEXT,
       role TEXT NOT NULL CHECK (role IN ('resident','guard','admin')),
+      status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('pending_invitation','active','disabled')),
+      society_id TEXT NOT NULL,
+      invited_by_user_id TEXT,
       flat_id TEXT,
       flat_label TEXT,
       tower_name TEXT,
+      owner_or_tenant TEXT CHECK (owner_or_tenant IN ('owner','tenant')),
+      gate TEXT,
+      shift TEXT,
       avatar_url TEXT,
       language_pref TEXT DEFAULT 'en',
+      created_at TEXT NOT NULL DEFAULT (current_timestamp)
+    );
+
+    CREATE TABLE IF NOT EXISTS invitations (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      society_id TEXT NOT NULL,
+      token_hash TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      used_at TEXT,
       created_at TEXT NOT NULL DEFAULT (current_timestamp)
     );
 
@@ -192,5 +209,28 @@ export function runMigrationsSqlite() {
     CREATE INDEX IF NOT EXISTS idx_complaints_status ON complaints(status);
     CREATE INDEX IF NOT EXISTS idx_bookings_amenity_date ON bookings(amenity_id, date);
     CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at);
+    CREATE INDEX IF NOT EXISTS idx_invitations_token_hash ON invitations(token_hash);
   `);
+  ensureLegacyUserColumns();
+}
+
+// Safety net for any portl.db created before this auth rework — CREATE TABLE IF NOT EXISTS above
+// only defines the shape for a brand-new file, so a pre-existing `users` table needs these
+// columns bolted on by hand. No-ops on a fresh database (all columns already exist).
+function ensureLegacyUserColumns() {
+  const cols: string[] = sqlite.prepare("PRAGMA table_info(users)").all().map((c: any) => c.name);
+  const additions: Array<[string, string]> = [
+    ["email", "TEXT NOT NULL DEFAULT ''"],
+    ["status", "TEXT NOT NULL DEFAULT 'active'"],
+    ["society_id", "TEXT NOT NULL DEFAULT ''"],
+    ["invited_by_user_id", "TEXT"],
+    ["owner_or_tenant", "TEXT"],
+    ["gate", "TEXT"],
+    ["shift", "TEXT"],
+  ];
+  for (const [column, definition] of additions) {
+    if (!cols.includes(column)) {
+      sqlite.exec(`ALTER TABLE users ADD COLUMN ${column} ${definition}`);
+    }
+  }
 }

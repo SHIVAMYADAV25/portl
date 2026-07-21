@@ -14,6 +14,8 @@ const bookingStatusEnum = pgEnum("booking_status", ["confirmed", "cancelled"]);
 const noticeCategoryEnum = pgEnum("notice_category", ["Maintenance", "Event", "Alert", "General"]);
 const billStatusEnum = pgEnum("bill_status", ["paid", "unpaid"]);
 const paymentStatusEnum = pgEnum("payment_status", ["created", "paid", "failed"]);
+const userStatusEnum = pgEnum("user_status", ["pending_invitation", "active", "disabled"]);
+const ownerTenantEnum = pgEnum("owner_tenant", ["owner", "tenant"]);
 
 const id = () => text("id").primaryKey();
 const now = () => timestamp("created_at", { mode: "string" }).notNull().defaultNow();
@@ -42,14 +44,31 @@ export const flats = pgTable("flats", {
 export const users = pgTable("users", {
   id: id(),
   name: text("name").notNull(),
-  phone: text("phone").notNull().unique(),
+  email: text("email").notNull(),
+  phone: text("phone").notNull(),
   passwordHash: text("password_hash"),
   role: roleEnum("role").notNull(),
+  status: userStatusEnum("status").notNull().default("active"),
+  societyId: text("society_id").notNull(),
+  invitedByUserId: text("invited_by_user_id"),
   flatId: text("flat_id"),
   flatLabel: text("flat_label"),
   towerName: text("tower_name"),
+  ownerOrTenant: ownerTenantEnum("owner_or_tenant"),
+  gate: text("gate"),
+  shift: text("shift"),
   avatarUrl: text("avatar_url"),
   languagePref: text("language_pref").default("en"),
+  createdAt: now(),
+});
+
+export const invitations = pgTable("invitations", {
+  id: id(),
+  userId: text("user_id").notNull(),
+  societyId: text("society_id").notNull(),
+  tokenHash: text("token_hash").notNull(),
+  expiresAt: timestamp("expires_at", { mode: "string" }).notNull(),
+  usedAt: timestamp("used_at", { mode: "string" }),
   createdAt: now(),
 });
 

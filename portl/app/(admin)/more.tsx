@@ -13,7 +13,7 @@ const menu: { section: string; items: { label: string; icon: keyof typeof Feathe
     section: "Society structure",
     items: [
       { label: "Towers & flats", icon: "layers", route: "/staff-directory" },
-      { label: "Residents", icon: "users", route: "/staff-directory" },
+      { label: "People (residents, guards, admins)", icon: "users", route: "/people" },
       { label: "Staff & vendors", icon: "briefcase", route: "/staff-directory" },
     ],
   },

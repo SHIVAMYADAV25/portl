@@ -1,45 +1,32 @@
 import { useState } from "react";
-import { View, Text, TextInput, KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { View, Text, KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
-import { useTranslation } from "react-i18next";
 import { Button } from "@/components/Button";
+import { FormField } from "@/components/FormField";
 import { colors } from "@/constants/theme";
-import type { Role } from "@/types";
-import { demoUsers } from "@/services/mockData";
-import { api, ApiUnreachableError } from "@/services/api";
+import { useAuthStore } from "@/store/authStore";
 
 export default function Login() {
-  const { t } = useTranslation();
-  const roleLabel: Record<Role, string> = {
-    resident: t("welcome.roleResident"),
-    guard: t("welcome.roleGuard"),
-    admin: t("welcome.roleAdmin"),
-  };
-  const { role } = useLocalSearchParams<{ role: Role }>();
-  const demoPhone = role ? demoUsers[role]?.phone : "";
-  const [phone, setPhone] = useState(demoPhone ?? "");
+  const login = useAuthStore((s) => s.login);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const sendOtp = async () => {
+  const submit = async () => {
+    if (loading || !email || !password) return;
+    setError(null);
     setLoading(true);
-    let demoMode = true;
-    try {
-      const res = await api.post<{ sent: boolean; demoMode: boolean }>(
-        "/auth/request-otp",
-        { phone },
-        { auth: false }
-      );
-      demoMode = res.demoMode;
-    } catch (err) {
-      // ApiUnreachableError (no backend) or a Twilio hiccup — either way, the OTP screen still
-      // works via the fixed demo code, so don't block the flow.
-      demoMode = true;
-    } finally {
-      setLoading(false);
+    const result = await login(email.trim().toLowerCase(), password);
+    setLoading(false);
+    if (!result.ok) {
+      setError(result.error ?? "Something went wrong");
+      return;
     }
-    router.push({ pathname: "/(auth)/otp", params: { role, phone, demoMode: demoMode ? "1" : "0" } });
+    // RootLayout's useProtectedRoute redirects to the right role dashboard automatically —
+    // the frontend never asks which role the person is; the backend already knows.
   };
 
   return (
@@ -52,39 +39,33 @@ export default function Login() {
         </View>
 
         <View className="px-6 pt-8 flex-1">
-          <Text className="font-display text-3xl text-ink900">{t("login.signIn")}</Text>
-          <Text className="text-ink400 font-body mt-2">
-            {t("login.continuingAs")} <Text className="text-ember600 font-body-semibold">{role ? roleLabel[role] : ""}</Text>
-          </Text>
+          <Text className="font-display text-3xl text-ink900">Sign in</Text>
+          <Text className="text-ink400 font-body mt-2">Use the email your admin invited you with.</Text>
 
           <View className="mt-8">
-            <Text className="text-ink500 font-body-medium text-sm mb-2">{t("login.phoneLabel")}</Text>
-            <View className="flex-row items-center bg-paper border border-ink100 rounded-2xl px-4 h-14">
-              <Text className="text-ink600 font-body-medium mr-2">+91</Text>
-              <View className="w-px h-6 bg-ink100 mr-3" />
-              <TextInput
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
-                placeholder="98765 43210"
-                placeholderTextColor={colors.ink300}
-                maxLength={10}
-                className="flex-1 text-ink800 font-body-medium text-base"
-              />
-            </View>
-            <Text className="text-ink300 text-xs mt-2">{t("login.otpHint")}</Text>
+            <FormField
+              label="Email address"
+              value={email}
+              onChangeText={(v) => { setEmail(v); setError(null); }}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+              placeholder="you@email.com"
+            />
+            <FormField
+              label="Password"
+              value={password}
+              onChangeText={(v) => { setPassword(v); setError(null); }}
+              secureTextEntry
+              autoCapitalize="none"
+              placeholder="Your password"
+              error={error ?? undefined}
+            />
           </View>
 
           <View className="flex-1" />
 
-          <Button
-            label={t("login.sendOtp")}
-            fullWidth
-            size="lg"
-            loading={loading}
-            disabled={phone.length < 10 || loading}
-            onPress={sendOtp}
-          />
+          <Button label="Sign in" fullWidth size="lg" loading={loading} disabled={!email || !password || loading} onPress={submit} />
           <View className="h-8" />
         </View>
       </SafeAreaView>

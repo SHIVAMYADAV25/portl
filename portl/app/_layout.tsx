@@ -20,7 +20,6 @@ import {
 import { useAuthStore } from "@/store/authStore";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { initI18n } from "@/localization/i18n";
-import { View } from "react-native";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -91,6 +90,8 @@ export default function RootLayout() {
             <Stack.Screen name="polls" options={{ animation: "slide_from_right" }} />
             <Stack.Screen name="payments" options={{ animation: "slide_from_right" }} />
             <Stack.Screen name="staff-directory" options={{ animation: "slide_from_right" }} />
+            <Stack.Screen name="people" options={{ animation: "slide_from_right" }} />
+            <Stack.Screen name="invite-person" options={{ animation: "slide_from_right" }} />
             <Stack.Screen name="profile" options={{ animation: "slide_from_right" }} />
           </Stack>
         </QueryClientProvider>

@@ -13,6 +13,14 @@ export async function getAccessToken() {
   }
 }
 
+async function getRefreshToken() {
+  try {
+    return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export async function setTokens(accessToken: string, refreshToken?: string) {
   try {
     await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken);
@@ -39,8 +47,8 @@ export class ApiError extends Error {
   }
 }
 
-/** Thrown when the backend can't be reached at all (offline / not running) — callers use this
- * to fall back to mock data so the app stays demoable without a live backend. */
+/** Thrown when the backend can't be reached at all (offline / not running) — callers use this to
+ * fall back to mock data so the app stays demoable without a live backend. */
 export class ApiUnreachableError extends Error {}
 
 interface RequestOptions {
@@ -48,10 +56,33 @@ interface RequestOptions {
   body?: unknown;
   auth?: boolean; // default true
   timeoutMs?: number;
+  /** internal — set on the retry after a silent token refresh, so we never loop forever */
+  _retried?: boolean;
+}
+
+// Access tokens are short-lived (15 min) by design — see backend/utils/jwt.ts — so every
+// authenticated request that comes back 401 gets ONE silent refresh-and-retry before giving up.
+// The person never sees a "session expired" screen for a routine token expiry.
+async function refreshAccessToken(): Promise<string | null> {
+  const refreshToken = await getRefreshToken();
+  if (!refreshToken) return null;
+  try {
+    const res = await fetch(`${API_URL}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    await setTokens(data.accessToken);
+    return data.accessToken as string;
+  } catch {
+    return null;
+  }
 }
 
 async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
-  const { method = "GET", body, auth = true, timeoutMs = 6000 } = opts;
+  const { method = "GET", body, auth = true, timeoutMs = 6000, _retried = false } = opts;
 
   const headers: Record<string, string> = { "Content-Type": "application/json" };
   if (auth) {
@@ -74,6 +105,11 @@ async function request<T>(path: string, opts: RequestOptions = {}): Promise<T> {
     throw new ApiUnreachableError((err as Error).message);
   } finally {
     clearTimeout(timeout);
+  }
+
+  if (res.status === 401 && auth && !_retried && path !== "/auth/refresh") {
+    const newToken = await refreshAccessToken();
+    if (newToken) return request<T>(path, { ...opts, _retried: true });
   }
 
   const text = await res.text();

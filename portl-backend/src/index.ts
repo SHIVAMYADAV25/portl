@@ -20,6 +20,7 @@ import staffRoutes from "./modules/staff/routes";
 import billRoutes from "./modules/bills/routes";
 import uploadRoutes from "./modules/uploads/routes";
 import societyRoutes from "./modules/society/routes";
+import adminRoutes from "./modules/admin/routes";
 import notificationRoutes from "./modules/notifications-api/routes";
 
 async function main() {
@@ -49,6 +50,7 @@ async function main() {
   app.use("/uploads-api", uploadRoutes); // POST here to upload; GET /uploads/:file to fetch
   app.use("/", societyRoutes); // exposes /towers and /flats directly
   app.use("/notifications", notificationRoutes);
+  app.use("/admin", adminRoutes);
 
   // 404 + error handling
   app.use((_req, res) => res.status(404).json({ error: "Not found" }));

@@ -34,6 +34,12 @@ export async function runMigrationsPg() {
       DO $$ BEGIN
         CREATE TYPE notification_type AS ENUM ('visitor','notice','complaint','poll','general');
       EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN
+        CREATE TYPE user_status AS ENUM ('pending_invitation','active','disabled');
+      EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN
+        CREATE TYPE owner_tenant AS ENUM ('owner','tenant');
+      EXCEPTION WHEN duplicate_object THEN null; END $$;
 
       CREATE TABLE IF NOT EXISTS societies (
         id TEXT PRIMARY KEY,
@@ -59,14 +65,38 @@ export async function runMigrationsPg() {
       CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
-        phone TEXT NOT NULL UNIQUE,
+        email TEXT NOT NULL,
+        phone TEXT NOT NULL,
         password_hash TEXT,
         role role NOT NULL,
+        status user_status NOT NULL DEFAULT 'active',
+        society_id TEXT NOT NULL DEFAULT '',
+        invited_by_user_id TEXT,
         flat_id TEXT,
         flat_label TEXT,
         tower_name TEXT,
+        owner_or_tenant owner_tenant,
+        gate TEXT,
+        shift TEXT,
         avatar_url TEXT,
         language_pref TEXT DEFAULT 'en',
+        created_at TIMESTAMP NOT NULL DEFAULT now()
+      );
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT NOT NULL DEFAULT '';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS status user_status NOT NULL DEFAULT 'active';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS society_id TEXT NOT NULL DEFAULT '';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS invited_by_user_id TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS owner_or_tenant owner_tenant;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS gate TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS shift TEXT;
+
+      CREATE TABLE IF NOT EXISTS invitations (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        society_id TEXT NOT NULL,
+        token_hash TEXT NOT NULL,
+        expires_at TIMESTAMP NOT NULL,
+        used_at TIMESTAMP,
         created_at TIMESTAMP NOT NULL DEFAULT now()
       );
 
@@ -225,6 +255,7 @@ export async function runMigrationsPg() {
       CREATE INDEX IF NOT EXISTS idx_complaints_status ON complaints(status);
       CREATE INDEX IF NOT EXISTS idx_bookings_amenity_date ON bookings(amenity_id, date);
       CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at);
+      CREATE INDEX IF NOT EXISTS idx_invitations_token_hash ON invitations(token_hash);
     `);
   } finally {
     client.release();

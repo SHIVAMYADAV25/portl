@@ -30,3 +30,4 @@ export const votes = active.votes as any;
 export const staff = active.staff as any;
 export const bills = active.bills as any;
 export const payments = active.payments as any;
+export const invitations = active.invitations as any;

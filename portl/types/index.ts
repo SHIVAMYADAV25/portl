@@ -1,14 +1,22 @@
 export type Role = "resident" | "guard" | "admin";
+export type UserStatus = "pending_invitation" | "active" | "disabled";
 
 export interface User {
   id: string;
   name: string;
+  email: string;
   phone: string;
   role: Role;
+  status?: UserStatus;
+  societyId?: string;
+  societyName?: string;
   avatarUrl?: string;
   flatId?: string;
-  flatLabel?: string; // e.g. "A-1005"
-  towerName?: string; // e.g. "Tower A"
+  flatLabel?: string;
+  towerName?: string;
+  ownerOrTenant?: "owner" | "tenant";
+  gate?: string;
+  shift?: string;
 }
 
 export type VisitorCategory = "guest" | "delivery" | "cab" | "service" | "other";
