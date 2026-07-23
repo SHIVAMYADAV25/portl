@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import * as Localization from "expo-localization";
-import * as SecureStore from "expo-secure-store";
+import * as Storage from "@/services/secureStorage";
 
 import en from "./locales/en.json";
 import hi from "./locales/hi.json";
@@ -46,7 +46,7 @@ export async function initI18n() {
 
   let language: SupportedLanguage = detectDeviceLanguage();
   try {
-    const saved = await SecureStore.getItemAsync(LANGUAGE_STORAGE_KEY);
+    const saved = await Storage.getItemAsync(LANGUAGE_STORAGE_KEY);
     if (isSupported(saved ?? undefined)) language = saved as SupportedLanguage;
   } catch {
     // SecureStore unavailable (e.g. web) or nothing saved yet — device-detected language stands.
@@ -65,7 +65,7 @@ export async function initI18n() {
 export async function setLanguage(lang: SupportedLanguage) {
   await i18n.changeLanguage(lang);
   try {
-    await SecureStore.setItemAsync(LANGUAGE_STORAGE_KEY, lang);
+    await Storage.setItemAsync(LANGUAGE_STORAGE_KEY, lang);
   } catch {
     // Best-effort persistence — switching still works for the rest of this session even if
     // SecureStore write fails (e.g. web).

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import * as SecureStore from "expo-secure-store";
+import * as Storage from "@/services/secureStorage";
 import type { User } from "@/types";
 import { api, ApiError, ApiUnreachableError, setTokens, clearTokens } from "@/services/api";
 import { connectSocket, disconnectSocket } from "@/services/socket";
@@ -27,13 +27,16 @@ interface AuthState {
   /** Set a password and activate — logs the person straight in. */
   activateInvitation: (token: string, password: string) => Promise<{ ok: boolean; error?: string }>;
   logout: () => Promise<void>;
+  /** Merges partial fields into the current user (e.g. after a profile edit) and re-persists the
+   *  session, so the header/dashboard reflect the change immediately without a full re-login. */
+  updateUser: (patch: Partial<User>) => void;
 }
 
 const USER_STORAGE_KEY = "portl.session.user";
 
 async function persistSession(user: User) {
   try {
-    await SecureStore.setItemAsync(USER_STORAGE_KEY, JSON.stringify({ user }));
+    await Storage.setItemAsync(USER_STORAGE_KEY, JSON.stringify({ user }));
   } catch {
     // ignore — secure store unavailable
   }
@@ -52,14 +55,14 @@ function extractErrorMessage(err: unknown): string {
   return "Something went wrong";
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   hasHydrated: false,
   isBackendLive: false,
 
   hydrate: async () => {
     try {
-      const saved = await SecureStore.getItemAsync(USER_STORAGE_KEY);
+      const saved = await Storage.getItemAsync(USER_STORAGE_KEY);
       if (saved) {
         const { user } = JSON.parse(saved) as { user: User };
         set({ user, isBackendLive: true, hasHydrated: true });
@@ -145,10 +148,18 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user: null, isBackendLive: false });
     await clearTokens();
     try {
-      await SecureStore.deleteItemAsync(USER_STORAGE_KEY);
+      await Storage.deleteItemAsync(USER_STORAGE_KEY);
     } catch {
       // ignore
     }
     disconnectSocket();
+  },
+
+  updateUser: (patch) => {
+    const current = get().user;
+    if (!current) return;
+    const next = { ...current, ...patch };
+    set({ user: next });
+    void persistSession(next);
   },
 }));
