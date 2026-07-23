@@ -40,13 +40,18 @@ export async function runMigrationsPg() {
       DO $$ BEGIN
         CREATE TYPE owner_tenant AS ENUM ('owner','tenant');
       EXCEPTION WHEN duplicate_object THEN null; END $$;
+      DO $$ BEGIN
+        CREATE TYPE poll_status AS ENUM ('open','closed');
+      EXCEPTION WHEN duplicate_object THEN null; END $$;
 
       CREATE TABLE IF NOT EXISTS societies (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         address TEXT,
+        logo_url TEXT,
         created_at TIMESTAMP NOT NULL DEFAULT now()
       );
+      ALTER TABLE societies ADD COLUMN IF NOT EXISTS logo_url TEXT;
 
       CREATE TABLE IF NOT EXISTS towers (
         id TEXT PRIMARY KEY,
@@ -124,6 +129,8 @@ export async function runMigrationsPg() {
         category visitor_category NOT NULL,
         company TEXT,
         purpose TEXT,
+        phone TEXT,
+        vehicle_number TEXT,
         photo_url TEXT,
         flat_id TEXT,
         flat_label TEXT NOT NULL,
@@ -135,6 +142,8 @@ export async function runMigrationsPg() {
         entry_time TIMESTAMP,
         exit_time TIMESTAMP
       );
+      ALTER TABLE visitors ADD COLUMN IF NOT EXISTS phone TEXT;
+      ALTER TABLE visitors ADD COLUMN IF NOT EXISTS vehicle_number TEXT;
 
       CREATE TABLE IF NOT EXISTS guest_passes (
         id TEXT PRIMARY KEY,
@@ -200,6 +209,18 @@ export async function runMigrationsPg() {
         question TEXT NOT NULL,
         created_by_user_id TEXT NOT NULL,
         closes_at TIMESTAMP NOT NULL,
+        status poll_status NOT NULL DEFAULT 'open',
+        created_at TIMESTAMP NOT NULL DEFAULT now()
+      );
+      ALTER TABLE polls ADD COLUMN IF NOT EXISTS status poll_status NOT NULL DEFAULT 'open';
+
+      CREATE TABLE IF NOT EXISTS complaint_comments (
+        id TEXT PRIMARY KEY,
+        complaint_id TEXT NOT NULL,
+        author_user_id TEXT NOT NULL,
+        author_name TEXT NOT NULL,
+        author_role role NOT NULL,
+        body TEXT NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT now()
       );
 
@@ -256,6 +277,7 @@ export async function runMigrationsPg() {
       CREATE INDEX IF NOT EXISTS idx_bookings_amenity_date ON bookings(amenity_id, date);
       CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at);
       CREATE INDEX IF NOT EXISTS idx_invitations_token_hash ON invitations(token_hash);
+      CREATE INDEX IF NOT EXISTS idx_complaint_comments_complaint ON complaint_comments(complaint_id);
     `);
   } finally {
     client.release();

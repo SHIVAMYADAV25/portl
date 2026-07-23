@@ -49,6 +49,48 @@ export function useCreateComplaint() {
   });
 }
 
+export interface ComplaintComment {
+  id: string;
+  complaintId: string;
+  authorUserId: string;
+  authorName: string;
+  authorRole: "resident" | "guard" | "admin";
+  body: string;
+  createdAt: string;
+}
+
+export function useComplaintComments(complaintId: string | null) {
+  const isBackendLive = useAuthStore((s) => s.isBackendLive);
+
+  return useQuery({
+    queryKey: ["complaints", complaintId, "comments"],
+    queryFn: async (): Promise<ComplaintComment[]> => {
+      if (!isBackendLive || !complaintId) return [];
+      try {
+        return (await api.get<{ comments: ComplaintComment[] }>(`/complaints/${complaintId}/comments`)).comments;
+      } catch (err) {
+        if (err instanceof ApiUnreachableError) return [];
+        throw err;
+      }
+    },
+    enabled: !!complaintId,
+    staleTime: 10_000,
+  });
+}
+
+export function useAddComplaintComment() {
+  const qc = useQueryClient();
+  const isBackendLive = useAuthStore((s) => s.isBackendLive);
+
+  return useMutation({
+    mutationFn: async ({ complaintId, body }: { complaintId: string; body: string }) => {
+      if (!isBackendLive) return { ok: true };
+      return api.post<{ comment: ComplaintComment }>(`/complaints/${complaintId}/comments`, { body });
+    },
+    onSuccess: (_data, vars) => qc.invalidateQueries({ queryKey: ["complaints", vars.complaintId, "comments"] }),
+  });
+}
+
 export function useUpdateComplaintStatus() {
   const qc = useQueryClient();
   const isBackendLive = useAuthStore((s) => s.isBackendLive);

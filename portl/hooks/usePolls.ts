@@ -25,6 +25,23 @@ export function usePolls() {
   });
 }
 
+export function useCreatePoll() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { question: string; options: string[]; closesAt: string }) =>
+      api.post<{ poll: Poll }>("/polls", input),
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
+export function useClosePoll() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (pollId: string) => api.post<{ poll: Poll }>(`/polls/${pollId}/close`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
 export function useVotePoll() {
   const qc = useQueryClient();
   const isBackendLive = useAuthStore((s) => s.isBackendLive);

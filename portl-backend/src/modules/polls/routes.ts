@@ -45,7 +45,7 @@ router.post("/", isAuthenticated, checkRole("admin"), async (req, res) => {
   const options = parsed.data.options.map((label) => ({ id: uuid(), pollId, label }));
   await db.insert(pollOptions).values(options);
 
-  const poll = { id: pollId, question: parsed.data.question, closesAt: parsed.data.closesAt, options: options.map((o) => ({ ...o, votes: 0 })), totalVotes: 0 };
+  const poll = { id: pollId, question: parsed.data.question, closesAt: parsed.data.closesAt, status: "open" as const, options: options.map((o) => ({ ...o, votes: 0 })), totalVotes: 0 };
   socketEvents.newPoll(poll);
   res.status(201).json({ poll });
 });
@@ -63,6 +63,16 @@ router.post("/:id/vote", isAuthenticated, checkRole("resident"), async (req, res
 
   await db.insert(votes).values({ id: uuid(), pollId: req.params.id, optionId: parsed.data.optionId, userId: req.user!.sub });
   res.status(201).json({ ok: true });
+});
+
+// ---------- Admin closes a poll early (voting stops immediately, results remain visible) ----------
+router.post("/:id/close", isAuthenticated, checkRole("admin"), async (req, res) => {
+  const [poll] = await db.select().from(polls).where(eq(polls.id, req.params.id));
+  if (!poll) return res.status(404).json({ error: "Poll not found" });
+  await db.update(polls).set({ status: "closed" }).where(eq(polls.id, req.params.id));
+  const [updated] = await db.select().from(polls).where(eq(polls.id, req.params.id));
+  socketEvents.newPoll(updated); // reuse the poll-changed broadcast so open clients refresh
+  res.json({ poll: updated });
 });
 
 router.get("/:id/results", isAuthenticated, async (req, res) => {

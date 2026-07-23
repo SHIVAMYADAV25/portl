@@ -47,6 +47,28 @@ export function useResendInvite() {
   });
 }
 
+export function useEditResident() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { userId: string; name?: string; phone?: string; flatId?: string; ownerOrTenant?: "owner" | "tenant" }) => {
+      const { userId, ...body } = input;
+      return api.put<{ user: User }>(`/admin/residents/${userId}`, body);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
+export function useEditGuard() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { userId: string; name?: string; phone?: string; gate?: string; shift?: "morning" | "evening" | "night" }) => {
+      const { userId, ...body } = input;
+      return api.put<{ user: User }>(`/admin/guards/${userId}`, body);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
 export function useSetPersonStatus() {
   const qc = useQueryClient();
   return useMutation({

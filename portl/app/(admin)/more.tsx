@@ -12,7 +12,7 @@ const menu: { section: string; items: { label: string; icon: keyof typeof Feathe
   {
     section: "Society structure",
     items: [
-      { label: "Towers & flats", icon: "layers", route: "/staff-directory" },
+      { label: "Towers & flats", icon: "layers", route: "/society-setup" },
       { label: "People (residents, guards, admins)", icon: "users", route: "/people" },
       { label: "Staff & vendors", icon: "briefcase", route: "/staff-directory" },
     ],
@@ -20,7 +20,7 @@ const menu: { section: string; items: { label: string; icon: keyof typeof Feathe
   {
     section: "Operations",
     items: [
-      { label: "Amenities config", icon: "calendar", route: "/(resident)/amenities" },
+      { label: "Amenities config", icon: "calendar", route: "/admin-amenities" },
       { label: "Polls", icon: "bar-chart-2", route: "/polls" },
       { label: "Billing & payments", icon: "credit-card", route: "/payments" },
       { label: "Visitor logs", icon: "clock", route: "/(guard)/history" },
@@ -28,7 +28,10 @@ const menu: { section: string; items: { label: string; icon: keyof typeof Feathe
   },
   {
     section: "Account",
-    items: [{ label: "My profile", icon: "user", route: "/profile" }],
+    items: [
+      { label: "Society settings", icon: "settings", route: "/admin-settings" },
+      { label: "My profile", icon: "user", route: "/profile" },
+    ],
   },
 ];
 

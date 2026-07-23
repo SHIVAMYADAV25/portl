@@ -40,7 +40,7 @@ export function useRegisterVisitor() {
   const isBackendLive = useAuthStore((s) => s.isBackendLive);
 
   return useMutation({
-    mutationFn: async (input: { name: string; category: VisitorCategory; company?: string; purpose?: string; flatLabel: string }) => {
+    mutationFn: async (input: { name: string; category: VisitorCategory; company?: string; purpose?: string; phone?: string; vehicleNumber?: string; flatLabel: string }) => {
       if (!isBackendLive) return { ...input, id: `local-${Date.now()}`, status: "pending" as const, requestedAt: new Date().toISOString() };
       try {
         const res = await api.post<{ visitor: Visitor }>("/visitors", input);
@@ -75,6 +75,50 @@ export function useVisitorAction() {
       }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
+export interface VisitorOverview {
+  visitorsToday: number;
+  visitorsInside: number;
+  pendingRequests: number;
+  rejectedToday: number;
+}
+
+/** Admin-only KPI strip: today / inside / pending / rejected, refreshed periodically. */
+export function useAdminVisitorOverview() {
+  const isBackendLive = useAuthStore((s) => s.isBackendLive);
+
+  return useQuery({
+    queryKey: ["admin", "visitors", "overview"],
+    queryFn: async (): Promise<VisitorOverview> => {
+      if (!isBackendLive) return { visitorsToday: 0, visitorsInside: 0, pendingRequests: 0, rejectedToday: 0 };
+      return api.get<VisitorOverview>("/admin/visitors/overview");
+    },
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+  });
+}
+
+/** Admin-only search across all visitor history by name / phone / vehicle / date. Only runs once
+ *  at least one filter is provided — the PRD is explicit that admins shouldn't get a screen for
+ *  casually browsing everyone's visitor history, only a targeted lookup. */
+export function useAdminVisitorSearch(filters: { name?: string; phone?: string; vehicle?: string; date?: string }) {
+  const hasFilter = Object.values(filters).some((v) => !!v && v.trim().length > 0);
+
+  return useQuery({
+    queryKey: ["admin", "visitors", "search", filters],
+    queryFn: async (): Promise<Visitor[]> => {
+      const qs = new URLSearchParams();
+      if (filters.name) qs.set("name", filters.name.trim());
+      if (filters.phone) qs.set("phone", filters.phone.trim());
+      if (filters.vehicle) qs.set("vehicle", filters.vehicle.trim());
+      if (filters.date) qs.set("date", filters.date.trim());
+      const res = await api.get<{ visitors: Visitor[] }>(`/admin/visitors/search?${qs.toString()}`);
+      return res.visitors;
+    },
+    enabled: hasFilter,
+    staleTime: 5_000,
   });
 }
 

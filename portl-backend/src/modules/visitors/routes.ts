@@ -16,6 +16,8 @@ const registerSchema = z.object({
   category: z.enum(["guest", "delivery", "cab", "service", "other"]),
   company: z.string().optional(),
   purpose: z.string().optional(),
+  phone: z.string().optional(),
+  vehicleNumber: z.string().optional(),
   flatLabel: z.string().min(1),
   towerName: z.string().optional(),
 });

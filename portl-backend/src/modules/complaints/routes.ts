@@ -3,7 +3,7 @@ import { z } from "zod";
 import { v4 as uuid } from "uuid";
 import { desc, eq } from "drizzle-orm";
 import { db } from "../../db";
-import { complaints, users } from "../../db/schema";
+import { complaints, complaintComments, users } from "../../db/schema";
 import { isAuthenticated, checkRole } from "../../middleware/auth";
 import { socketEvents } from "../../socket";
 
@@ -63,6 +63,49 @@ router.put("/:id", isAuthenticated, checkRole("admin"), async (req, res) => {
   if (!updated) return res.status(404).json({ error: "Complaint not found" });
   socketEvents.ticketUpdated(updated);
   res.json({ complaint: updated });
+});
+
+// ---------- Comment thread on a ticket (admin notes, resident follow-ups) ----------
+router.get("/:id/comments", isAuthenticated, async (req, res) => {
+  const [complaint] = await db.select().from(complaints).where(eq(complaints.id, req.params.id));
+  if (!complaint) return res.status(404).json({ error: "Complaint not found" });
+  if (req.user!.role === "resident" && complaint.raisedByUserId !== req.user!.sub) {
+    return res.status(403).json({ error: "You can only view comments on your own tickets" });
+  }
+  const rows = await db
+    .select()
+    .from(complaintComments)
+    .where(eq(complaintComments.complaintId, req.params.id))
+    .orderBy(complaintComments.createdAt);
+  res.json({ comments: rows });
+});
+
+const addCommentSchema = z.object({ body: z.string().min(1) });
+
+router.post("/:id/comments", isAuthenticated, async (req, res) => {
+  const parsed = addCommentSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+
+  const [complaint] = await db.select().from(complaints).where(eq(complaints.id, req.params.id));
+  if (!complaint) return res.status(404).json({ error: "Complaint not found" });
+  if (req.user!.role === "resident" && complaint.raisedByUserId !== req.user!.sub) {
+    return res.status(403).json({ error: "You can only comment on your own tickets" });
+  }
+
+  const [me] = await db.select().from(users).where(eq(users.id, req.user!.sub));
+  const id = uuid();
+  const comment = {
+    id,
+    complaintId: req.params.id,
+    authorUserId: req.user!.sub,
+    authorName: me?.name ?? "Someone",
+    authorRole: req.user!.role,
+    body: parsed.data.body,
+    createdAt: new Date().toISOString(),
+  };
+  await db.insert(complaintComments).values(comment);
+  socketEvents.ticketUpdated(complaint); // nudges open clients to refetch the ticket + thread
+  res.status(201).json({ comment });
 });
 
 export default router;

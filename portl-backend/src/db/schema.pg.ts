@@ -16,6 +16,7 @@ const billStatusEnum = pgEnum("bill_status", ["paid", "unpaid"]);
 const paymentStatusEnum = pgEnum("payment_status", ["created", "paid", "failed"]);
 const userStatusEnum = pgEnum("user_status", ["pending_invitation", "active", "disabled"]);
 const ownerTenantEnum = pgEnum("owner_tenant", ["owner", "tenant"]);
+const pollStatusEnum = pgEnum("poll_status", ["open", "closed"]);
 
 const id = () => text("id").primaryKey();
 const now = () => timestamp("created_at", { mode: "string" }).notNull().defaultNow();
@@ -24,6 +25,7 @@ export const societies = pgTable("societies", {
   id: id(),
   name: text("name").notNull(),
   address: text("address"),
+  logoUrl: text("logo_url"),
   createdAt: now(),
 });
 
@@ -96,6 +98,8 @@ export const visitors = pgTable("visitors", {
   category: visitorCategoryEnum("category").notNull(),
   company: text("company"),
   purpose: text("purpose"),
+  phone: text("phone"),
+  vehicleNumber: text("vehicle_number"),
   photoUrl: text("photo_url"),
   flatId: text("flat_id"),
   flatLabel: text("flat_label").notNull(),
@@ -172,6 +176,7 @@ export const polls = pgTable("polls", {
   question: text("question").notNull(),
   createdByUserId: text("created_by_user_id").notNull(),
   closesAt: timestamp("closes_at", { mode: "string" }).notNull(),
+  status: pollStatusEnum("status").notNull().default("open"),
   createdAt: now(),
 });
 
@@ -186,6 +191,16 @@ export const votes = pgTable("votes", {
   pollId: text("poll_id").notNull(),
   optionId: text("option_id").notNull(),
   userId: text("user_id").notNull(),
+  createdAt: now(),
+});
+
+export const complaintComments = pgTable("complaint_comments", {
+  id: id(),
+  complaintId: text("complaint_id").notNull(),
+  authorUserId: text("author_user_id").notNull(),
+  authorName: text("author_name").notNull(),
+  authorRole: roleEnum("author_role").notNull(),
+  body: text("body").notNull(),
   createdAt: now(),
 });
 

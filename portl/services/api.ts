@@ -1,4 +1,4 @@
-import * as SecureStore from "expo-secure-store";
+import * as Storage from "./secureStorage";
 
 export const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://localhost:4000";
 
@@ -7,7 +7,7 @@ const REFRESH_TOKEN_KEY = "portl.session.refreshToken";
 
 export async function getAccessToken() {
   try {
-    return await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+    return await Storage.getItemAsync(ACCESS_TOKEN_KEY);
   } catch {
     return null;
   }
@@ -15,7 +15,7 @@ export async function getAccessToken() {
 
 async function getRefreshToken() {
   try {
-    return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+    return await Storage.getItemAsync(REFRESH_TOKEN_KEY);
   } catch {
     return null;
   }
@@ -23,17 +23,17 @@ async function getRefreshToken() {
 
 export async function setTokens(accessToken: string, refreshToken?: string) {
   try {
-    await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken);
-    if (refreshToken) await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
+    await Storage.setItemAsync(ACCESS_TOKEN_KEY, accessToken);
+    if (refreshToken) await Storage.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
   } catch {
-    // ignore — secure store unavailable
+    // ignore — storage unavailable
   }
 }
 
 export async function clearTokens() {
   try {
-    await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY);
-    await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+    await Storage.deleteItemAsync(ACCESS_TOKEN_KEY);
+    await Storage.deleteItemAsync(REFRESH_TOKEN_KEY);
   } catch {
     // ignore
   }

@@ -9,6 +9,7 @@ export const societies = sqliteTable("societies", {
   id: id(),
   name: text("name").notNull(),
   address: text("address"),
+  logoUrl: text("logo_url"),
   createdAt: now(),
 });
 
@@ -79,6 +80,8 @@ export const visitors = sqliteTable("visitors", {
   category: text("category", { enum: ["guest", "delivery", "cab", "service", "other"] }).notNull(),
   company: text("company"),
   purpose: text("purpose"),
+  phone: text("phone"),
+  vehicleNumber: text("vehicle_number"),
   photoUrl: text("photo_url"),
   flatId: text("flat_id"),
   flatLabel: text("flat_label").notNull(),
@@ -128,6 +131,17 @@ export const complaints = sqliteTable("complaints", {
   updatedAt: text("updated_at").notNull().default(sql`(current_timestamp)`),
 });
 
+// ---------- Complaint comments (helpdesk conversation thread) ----------
+export const complaintComments = sqliteTable("complaint_comments", {
+  id: id(),
+  complaintId: text("complaint_id").notNull(),
+  authorUserId: text("author_user_id").notNull(),
+  authorName: text("author_name").notNull(),
+  authorRole: text("author_role", { enum: ["resident", "guard", "admin"] }).notNull(),
+  body: text("body").notNull(),
+  createdAt: now(),
+});
+
 // ---------- Amenities & bookings ----------
 export const amenities = sqliteTable("amenities", {
   id: id(),
@@ -170,6 +184,7 @@ export const polls = sqliteTable("polls", {
   question: text("question").notNull(),
   createdByUserId: text("created_by_user_id").notNull(),
   closesAt: text("closes_at").notNull(),
+  status: text("status", { enum: ["open", "closed"] }).notNull().default("open"),
   createdAt: now(),
 });
 

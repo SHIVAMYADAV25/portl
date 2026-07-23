@@ -25,6 +25,25 @@ export function useNotices() {
   });
 }
 
+export function useUpdateNotice() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { id: string; title?: string; body?: string; category?: Notice["category"] }) => {
+      const { id, ...body } = input;
+      return api.put<{ notice: Notice }>(`/notices/${id}`, body);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
+export function useDeleteNotice() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete<{ ok: boolean }>(`/notices/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  });
+}
+
 export function useCreateNotice() {
   const qc = useQueryClient();
   const isBackendLive = useAuthStore((s) => s.isBackendLive);

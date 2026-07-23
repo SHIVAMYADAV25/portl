@@ -28,6 +28,8 @@ export interface Visitor {
   category: VisitorCategory;
   company?: string; // e.g. "Flipkart", "Zomato", "Ola"
   purpose?: string;
+  phone?: string;
+  vehicleNumber?: string;
   photoUrl?: string;
   flatLabel: string;
   towerName?: string;
@@ -92,6 +94,7 @@ export interface Poll {
   options: { id: string; label: string; votes: number }[];
   totalVotes: number;
   closesAt: string;
+  status?: "open" | "closed";
   myVote?: string;
 }
 

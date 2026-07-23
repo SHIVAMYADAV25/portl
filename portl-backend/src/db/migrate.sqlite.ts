@@ -6,6 +6,7 @@ export function runMigrationsSqlite() {
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       address TEXT,
+      logo_url TEXT,
       created_at TEXT NOT NULL DEFAULT (current_timestamp)
     );
 
@@ -78,6 +79,8 @@ export function runMigrationsSqlite() {
       category TEXT NOT NULL CHECK (category IN ('guest','delivery','cab','service','other')),
       company TEXT,
       purpose TEXT,
+      phone TEXT,
+      vehicle_number TEXT,
       photo_url TEXT,
       flat_id TEXT,
       flat_label TEXT NOT NULL,
@@ -154,6 +157,17 @@ export function runMigrationsSqlite() {
       question TEXT NOT NULL,
       created_by_user_id TEXT NOT NULL,
       closes_at TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open','closed')),
+      created_at TEXT NOT NULL DEFAULT (current_timestamp)
+    );
+
+    CREATE TABLE IF NOT EXISTS complaint_comments (
+      id TEXT PRIMARY KEY,
+      complaint_id TEXT NOT NULL,
+      author_user_id TEXT NOT NULL,
+      author_name TEXT NOT NULL,
+      author_role TEXT NOT NULL CHECK (author_role IN ('resident','guard','admin')),
+      body TEXT NOT NULL,
       created_at TEXT NOT NULL DEFAULT (current_timestamp)
     );
 
@@ -210,8 +224,26 @@ export function runMigrationsSqlite() {
     CREATE INDEX IF NOT EXISTS idx_bookings_amenity_date ON bookings(amenity_id, date);
     CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at);
     CREATE INDEX IF NOT EXISTS idx_invitations_token_hash ON invitations(token_hash);
+    CREATE INDEX IF NOT EXISTS idx_complaint_comments_complaint ON complaint_comments(complaint_id);
   `);
   ensureLegacyUserColumns();
+  ensureLegacyColumns("societies", [["logo_url", "TEXT"]]);
+  ensureLegacyColumns("visitors", [
+    ["phone", "TEXT"],
+    ["vehicle_number", "TEXT"],
+  ]);
+  ensureLegacyColumns("polls", [["status", "TEXT NOT NULL DEFAULT 'open'"]]);
+}
+
+// Generic version of ensureLegacyUserColumns below, for any other table that gains columns after
+// its CREATE TABLE IF NOT EXISTS was already shipped to someone's database.
+function ensureLegacyColumns(table: string, additions: Array<[string, string]>) {
+  const cols: string[] = sqlite.prepare(`PRAGMA table_info(${table})`).all().map((c: any) => c.name);
+  for (const [column, definition] of additions) {
+    if (!cols.includes(column)) {
+      sqlite.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+    }
+  }
 }
 
 // Safety net for any portl.db created before this auth rework — CREATE TABLE IF NOT EXISTS above

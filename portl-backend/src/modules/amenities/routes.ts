@@ -30,6 +30,25 @@ router.post("/", isAuthenticated, checkRole("admin"), async (req, res) => {
   res.status(201).json({ id });
 });
 
+const updateSchema = z.object({
+  name: z.string().min(1).optional(),
+  icon: z.string().optional(),
+  location: z.string().optional(),
+  openTime: z.string().optional(),
+  closeTime: z.string().optional(),
+  slotMinutes: z.number().optional(),
+});
+
+router.put("/:id", isAuthenticated, checkRole("admin"), async (req, res) => {
+  const parsed = updateSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+  const [existing] = await db.select().from(amenities).where(eq(amenities.id, req.params.id));
+  if (!existing) return res.status(404).json({ error: "Amenity not found" });
+  await db.update(amenities).set(parsed.data).where(eq(amenities.id, req.params.id));
+  const [updated] = await db.select().from(amenities).where(eq(amenities.id, req.params.id));
+  res.json({ amenity: updated });
+});
+
 router.delete("/:id", isAuthenticated, checkRole("admin"), async (req, res) => {
   await db.delete(amenities).where(eq(amenities.id, req.params.id));
   res.json({ ok: true });

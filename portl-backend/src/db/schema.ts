@@ -21,6 +21,7 @@ export const notifications = active.notifications as any;
 export const visitors = active.visitors as any;
 export const guestPasses = active.guestPasses as any;
 export const complaints = active.complaints as any;
+export const complaintComments = active.complaintComments as any;
 export const amenities = active.amenities as any;
 export const bookings = active.bookings as any;
 export const notices = active.notices as any;

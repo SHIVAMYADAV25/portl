@@ -24,6 +24,7 @@ export default function Register() {
   const [flat, setFlat] = useState("");
   const [flatFocused, setFlatFocused] = useState(false);
   const [purpose, setPurpose] = useState("");
+  const [vehicleNumber, setVehicleNumber] = useState("");
   const [sent, setSent] = useState(false);
 
   const flatMatches = useMemo(() => {
@@ -42,13 +43,20 @@ export default function Register() {
     setName("");
     setFlat("");
     setPurpose("");
+    setVehicleNumber("");
     setSent(false);
   };
 
   const submit = () => {
     if (!name.trim() || !flat.trim()) return;
     registerVisitor.mutate(
-      { name: name.trim(), category, flatLabel: flat.trim(), purpose: purpose.trim() || undefined },
+      {
+        name: name.trim(),
+        category,
+        flatLabel: flat.trim(),
+        purpose: purpose.trim() || undefined,
+        vehicleNumber: vehicleNumber.trim() || undefined,
+      },
       { onSuccess: () => setSent(true) }
     );
   };
@@ -164,8 +172,22 @@ export default function Register() {
             onChangeText={setPurpose}
             placeholder="e.g. Package delivery"
             placeholderTextColor={colors.ink300}
-            className="bg-paper border border-ink100 rounded-2xl px-4 py-3.5 text-ink800 font-body mb-8"
+            className="bg-paper border border-ink100 rounded-2xl px-4 py-3.5 text-ink800 font-body mb-5"
           />
+
+          {(category === "cab" || category === "delivery" || category === "service") && (
+            <>
+              <Text className="text-ink500 font-body-medium text-sm mb-2">Vehicle number (optional)</Text>
+              <TextInput
+                value={vehicleNumber}
+                onChangeText={setVehicleNumber}
+                placeholder="e.g. MH12AB1234"
+                placeholderTextColor={colors.ink300}
+                autoCapitalize="characters"
+                className="bg-paper border border-ink100 rounded-2xl px-4 py-3.5 text-ink800 font-body mb-8"
+              />
+            </>
+          )}
 
           <Button
             label="Send approval request"

@@ -20,6 +20,10 @@ export default function AdminLayout() {
         options={{ title: t("tabs.overview"), tabBarIcon: ({ color, size }) => <Feather name="grid" color={color} size={size - 2} /> }}
       />
       <Tabs.Screen
+        name="visitors"
+        options={{ title: "Visitors", tabBarIcon: ({ color, size }) => <Feather name="user-check" color={color} size={size - 2} /> }}
+      />
+      <Tabs.Screen
         name="complaints"
         options={{ title: t("tabs.complaints"), tabBarIcon: ({ color, size }) => <Feather name="life-buoy" color={color} size={size - 2} /> }}
       />

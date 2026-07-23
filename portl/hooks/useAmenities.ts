@@ -23,6 +23,34 @@ export function useAmenities() {
   });
 }
 
+export function useCreateAmenity() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { name: string; icon?: string; location?: string; openTime?: string; closeTime?: string; slotMinutes?: number }) =>
+      api.post<{ id: string }>("/amenities", input),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["amenities"] }),
+  });
+}
+
+export function useUpdateAmenity() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: { id: string; name?: string; icon?: string; location?: string; openTime?: string; closeTime?: string; slotMinutes?: number }) => {
+      const { id, ...body } = input;
+      return api.put<{ amenity: Amenity }>(`/amenities/${id}`, body);
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["amenities"] }),
+  });
+}
+
+export function useDeleteAmenity() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => api.delete<{ ok: boolean }>(`/amenities/${id}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["amenities"] }),
+  });
+}
+
 export function useBookings(amenityId?: string) {
   const isBackendLive = useAuthStore((s) => s.isBackendLive);
 

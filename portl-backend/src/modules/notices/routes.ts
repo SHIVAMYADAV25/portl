@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { v4 as uuid } from "uuid";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "../../db";
 import { notices } from "../../db/schema";
 import { isAuthenticated, checkRole } from "../../middleware/auth";
@@ -36,6 +36,30 @@ router.post("/", isAuthenticated, checkRole("admin"), async (req, res) => {
   await notifyAllUsers(notice.title, notice.body.slice(0, 120), "notice", { noticeId: id });
 
   res.status(201).json({ notice });
+});
+
+const updateSchema = z.object({
+  title: z.string().min(1).optional(),
+  body: z.string().min(1).optional(),
+  category: z.enum(["Maintenance", "Event", "Alert", "General"]).optional(),
+  pinned: z.boolean().optional(),
+});
+
+router.put("/:id", isAuthenticated, checkRole("admin"), async (req, res) => {
+  const parsed = updateSchema.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: parsed.error.flatten() });
+  const [existing] = await db.select().from(notices).where(eq(notices.id, req.params.id));
+  if (!existing) return res.status(404).json({ error: "Notice not found" });
+  await db.update(notices).set(parsed.data).where(eq(notices.id, req.params.id));
+  const [updated] = await db.select().from(notices).where(eq(notices.id, req.params.id));
+  res.json({ notice: updated });
+});
+
+router.delete("/:id", isAuthenticated, checkRole("admin"), async (req, res) => {
+  const [existing] = await db.select().from(notices).where(eq(notices.id, req.params.id));
+  if (!existing) return res.status(404).json({ error: "Notice not found" });
+  await db.delete(notices).where(eq(notices.id, req.params.id));
+  res.json({ ok: true });
 });
 
 export default router;
